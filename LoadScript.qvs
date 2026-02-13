@@ -1,0 +1,53 @@
+MasterTable:
+LOAD * INLINE [
+    Artista, Cancion, Reproducciones_Diarias, Genero, Era, Año Lanzamiento, Sello
+    'Bad Bunny', 'Monaco', 450000, 'Reggaeton', 'Actual', 2023, 'Rimas'
+    'Bizarrap', 'Bzrp Music Sessions, Vol. 53', 400000, 'Trap', 'Actual', 2023, 'Dale Play'
+    'Feid', 'Luna', 380000, 'Reggaeton', 'Actual', 2023, 'Universal'
+    'Myke Towers', 'LALA', 350000, 'Reggaeton', 'Actual', 2023, 'Warner'
+    'Karol G', 'Provenza', 320000, 'Reggaeton', 'Actual', 2022, 'Universal'
+    'Milo J', '111', 310000, 'Trap', 'Actual', 2023, 'Dale Play'
+    'Duki', 'Givenchy', 300000, 'Trap', 'Actual', 2022, 'SSJ Records'
+    'Tini', 'Cupido', 290000, 'Pop Urbano', 'Actual', 2023, 'Sony'
+    'Maria Becerra', 'Automático', 280000, 'Pop Urbano', 'Actual', 2022, 'Warner'
+    'Emilia', 'GTA.mp3', 270000, 'Pop Urbano', 'Actual', 2023, 'Sony'
+    'Tiago PZK', 'Que se parezca a ti', 260000, 'Trap', 'Actual', 2023, 'Warner'
+    'Lit Killah', 'Los del Espacio', 255000, 'Trap', 'Actual', 2023, 'Warner'
+    'Mesita', 'Una Foto', 250000, 'Trap', 'Actual', 2023, 'Independiente'
+    'Young Miko', 'Classy 101', 240000, 'Trap', 'Actual', 2023, 'The Wave'
+    'Quevedo', 'Columbia', 230000, 'Reggaeton', 'Actual', 2023, 'Taste the Dust'
+    'Rauw Alejandro', 'Santa', 220000, 'Reggaeton', 'Actual', 2024, 'Sony'
+    'Anuel AA', 'Sola', 210000, 'Reggaeton', 'Actual', 2023, 'Real Hasta la Muerte'
+    'J Balvin', 'Mi Gente', 200000, 'Reggaeton', 'Actual', 2017, 'Universal'
+    'Maluma', 'Hawái', 190000, 'Reggaeton', 'Actual', 2020, 'Sony'
+    'Ozuna', 'Hey Moro', 180000, 'Reggaeton', 'Actual', 2023, 'Sony'
+    'Soda Stereo', 'De Música Ligera', 150000, 'Rock', 'Leyenda', 1990, 'Sony'
+    'Charly García', 'Nos siguen pegando abajo', 120000, 'Rock', 'Leyenda', 1983, 'Sony'
+    'Luis Alberto Spinetta', 'Seguir viviendo sin tu amor', 110000, 'Rock', 'Leyenda', 1991, 'Sony'
+    'The Beatles', 'Here Comes The Sun', 140000, 'Rock', 'Leyenda', 1969, 'Apple Records'
+    'Queen', 'Bohemian Rhapsody', 145000, 'Rock', 'Leyenda', 1975, 'EMI'
+    'Pink Floyd', 'Another Brick in the Wall', 130000, 'Rock', 'Leyenda', 1979, 'Columbia'
+    'The Rolling Stones', 'Paint It, Black', 125000, 'Rock', 'Leyenda', 1966, 'Decca'
+    'Led Zeppelin', 'Stairway to Heaven', 115000, 'Rock', 'Leyenda', 1971, 'Atlantic'
+    'Nirvana', 'Smells Like Teen Spirit', 135000, 'Rock', 'Leyenda', 1991, 'DGC'
+];
+
+RangoAños:
+LOAD
+    Min([Año Lanzamiento]) as MinAño,
+    Max([Año Lanzamiento]) as MaxAño
+RESIDENT MasterTable;
+
+LET vMinAño = Peek('MinAño', 0, 'RangoAños');
+LET vMaxAño = Peek('MaxAño', 0, 'RangoAños');
+
+DROP TABLE RangoAños;
+
+// 2. Creamos una tabla de tiempo simple para tus años
+CalendarioAños:
+LOAD
+    $(vMinAño) + IterNo() - 1 as [Año Lanzamiento],
+    If($(vMinAño) + IterNo() - 1 < 2000, 'Clásicos', 'Modernos') as Decada_Tipo
+AUTOGENERATE 1
+WHILE $(vMinAño) + IterNo() - 1 <= $(vMaxAño);
+
