@@ -1,3 +1,8 @@
+# 🎧 Proyecto: Spotify Analytics Dashboard
+
+![Vista General del Dashboard](dashboard_full.png)
+
+---
 Spotify Data Analytics Dashboard (Qlik Sense)
 Este proyecto es un dashboard interactivo desarrollado en Qlik Sense que analiza un dataset de reproducciones diarias de música, comparando éxitos actuales del género urbano con clásicos legendarios del rock.
 
